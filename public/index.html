@@ -10,6 +10,8 @@
     <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-categorize-image@1.1.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@1.0.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey@1.0.1"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@1.0.1/css/survey.css">
 
     <script>
         console.warn = () => {};
@@ -277,10 +279,47 @@
 
             timeline.push(test_procedure);
 
+            // const comment_block = {
+            //     type: jsPsychSurveyText,
+            //     preamble: "<p>You have completed the task.</p>",
+            //     questions: [{ prompt: "Do you have any comments about the study?", name: 'comments', columns: 80 }],
+            //     on_finish: function(data) {
+            //         sendResults(jsPsych.data.get()['trials']);
+            //     }
+            // };
+            //
+            // timeline.push(comment_block);
+
             const comment_block = {
-                type: jsPsychSurveyText,
-                preamble: "<p>You have completed the task.</p>",
-                questions: [{ prompt: "Do you have any comments about the study?", name: 'comments', columns: 80 }],
+                type: jsPsychSurvey,
+                survey_json: {
+                    showQuestionNumbers: false,
+                    elements:
+                        [
+                            {
+                                type: 'text',
+                                title: "Do you have any comments about the study?",
+                                name: 'comments',
+                                placeholder: 'Comments here',
+                                columns: 80,
+                                isRequired: true
+                            },
+                            {
+                                type: 'radiogroup',
+                                title: "Did you experience any technical difficulties with this task?",
+                                name: 'technical_difficulties',
+                                choices: ["Yes", "No"],
+                                isRequired: true
+                            },
+                            {
+                                type: 'text',
+                                title: "If yes, please describe your experience.",
+                                name: 'difficulty_description',
+                                placeholder: 'Describe any technical difficulties',
+                                required: false
+                            }
+
+                        ]},
                 on_finish: function(data) {
                     sendResults(jsPsych.data.get()['trials']);
                 }
